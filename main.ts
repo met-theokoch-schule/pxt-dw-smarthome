@@ -31,9 +31,9 @@ const enum openclose {
 }
 const enum lampennamen {
     //% block="Deckenlampe 1"
-    dl1 = 0,
+    dl1 = 1,
     //% block="Deckenlampe 2"
-    dl2 = 1,
+    dl2 = 0,
     //% block="Außenlampe"
     al = 2,
     //% block="Wandlampe"
@@ -110,8 +110,8 @@ namespace smarthome {
      */
 
     let Lampen = neopixel.create(DigitalPin.C8, 11, NeoPixelMode.RGB)
-    let dl1 = Lampen.range(0, 0);
-    let dl2 = Lampen.range(1, 1);
+    let dl2 = Lampen.range(0, 0);
+    let dl1 = Lampen.range(1, 1);
     let al = Lampen.range(2, 2);
     let wl = Lampen.range(3, 10);
 

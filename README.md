@@ -1,22 +1,11 @@
 
 > Diese Seite bei [https://met-theokoch-schule.github.io/pxt-dw-smarthome/](https://met-theokoch-schule.github.io/pxt-dw-smarthome/) öffnen
 
-## Als Erweiterung verwenden
+## Das DW-Smarthome ein Projekt der Theo-Koch-Schule Grünberg
 
-Dieses Repository kann als **Erweiterung** in MakeCode hinzugefügt werden.
+Mit der DW-Smarthome Erweiterung kann das Smarthome-Modell gesteuert werden. Es wurde entwickelt für den EInsatz in der 6. Klasse. Daher sind nur ausgewählte Funktionen als Blöcke betreitgestellt.
 
-* öffne [https://makecode.calliope.cc/](https://makecode.calliope.cc/)
-* klicke auf **Neues Projekt**
-* klicke auf **Erweiterungen** unter dem Zahnrad-Menü
-* nach **https://github.com/met-theokoch-schule/pxt-dw-smarthome** suchen und importieren
-
-## Dieses Projekt bearbeiten
-
-Um dieses Repository in MakeCode zu bearbeiten.
-
-* öffne [https://makecode.calliope.cc/](https://makecode.calliope.cc/)
-* klicke auf **Importieren** und dann auf **Importiere URL**
-* füge **https://github.com/met-theokoch-schule/pxt-dw-smarthome** ein und klicke auf Importieren
+![Blöcke](https://github.com/met-theokoch-schule/pxt-dw-smarthome/raw/master/blocks.png "Smarthome Blöcke")
 
 #### Metadaten (verwendet für Suche, Rendering)
 

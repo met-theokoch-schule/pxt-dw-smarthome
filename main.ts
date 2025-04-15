@@ -39,7 +39,6 @@ const enum lampennamen {
     //% block="Wandlampe"
     wl = 3
 }
-
 //% weight=2 color=#AA278D icon="\uf015" block="Smarthome"
 namespace smarthome {
 

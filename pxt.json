@@ -14,11 +14,11 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "6.0.42",
+        "target": "7.0.3",
         "targetId": "calliopemini"
     },
     "supportedTargets": [
         "calliopemini"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }

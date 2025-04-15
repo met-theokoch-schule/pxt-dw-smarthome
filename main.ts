@@ -48,6 +48,8 @@ namespace smarthome {
      * by Moritz Metelmann
      */
 
+    let shades_open: boolean = false;
+
     /**
     * Öffnet/Schließt den Rolladen
     */
@@ -59,17 +61,32 @@ namespace smarthome {
             pins.servoWritePin(AnalogPin.C16, 0)
             basic.pause(800)
             pins.servoSetPulse(AnalogPin.C16, 0)
+            shades_open = true;
         } else {
             pins.servoWritePin(AnalogPin.C16, 180)
             basic.pause(800)
             pins.servoSetPulse(AnalogPin.C16, 0)
+            shades_open = false;
         }
     }
-    
+
+    /**
+    * Ist der Rolladen offen?
+    */
+    //% block="shade is open"
+    //% block.loc.de="Rolladen ist offen"
+    //% weight=5
+    //% group="Zustände"
+    export function GetShadesStatus(): boolean {
+        return shades_open;
+    }
+
     /**
      * Code für die Klimaanlage
      * by Moritz Metelmann
      */
+
+    let ac_on: boolean = false;
 
     /**
     * Schaltet die Klimaanlage an/aus
@@ -77,16 +94,19 @@ namespace smarthome {
     //% block="switch aircondition $state"
     //% block.loc.de="schalte die Klimaanlage $state"
     //% inlineInputMode=inline
+    //% weight=5
     export function SwitchAC(state: onoff = onoff.on) {
         if (state === onoff.on) {
             motors.dualMotorPower(Motor.M0, 100)
+            ac_on = true;
         } else {
             motors.dualMotorPower(Motor.M0, 0)
+            ac_on = false;
         }
     }
 
     /**
-    * Schaltet die Klimaanlage auf eine prozentuale Geschwindiktei
+    * Schaltet die Klimaanlage auf eine prozentuale Geschwindikteit
     */
     //% blockId=CalliBrightness block="set aircondition to %c %"
     //% block.loc.de="setze Klimaanlage auf %c %"
@@ -100,6 +120,18 @@ namespace smarthome {
             c = 100
         }
         motors.dualMotorPower(Motor.M0, c)
+        ac_on = true;
+    }
+
+    /**
+    * Ist die Klimaanlage an?
+    */
+    //% block="aircondition is on"
+    //% block.loc.de="Klimaanlage ist an"
+    //% weight=5
+    //% group="Zustände"
+    export function GetACStatus(): boolean {
+        return ac_on;
     }
 
     /**
@@ -114,6 +146,8 @@ namespace smarthome {
     let dl1 = Lampen.range(1, 1);
     let al = Lampen.range(2, 2);
     let wl = Lampen.range(3, 10);
+
+    let lampen_state = [false, false, false, false];
 
     let ccolors = [0xff0000, 0xFF7F00, 0xFFFE00, 0x7FFF00, 0x00FF00, 0x00FF7F,
         0x00FFFE, 0x0040FF, 0x0000FF, 0x6000FF, 0xFE00FF, 0xFF0040]
@@ -139,6 +173,11 @@ namespace smarthome {
         Lampen.setPixelColor(9, color7)
         Lampen.setPixelColor(10, color8)
         Lampen.show()
+        if (color1 != 0x000000 || color2 != 0x000000 || color3 != 0x000000 || color4 != 0x000000 || color5 != 0x000000 || color6 != 0x000000 || color7 != 0x000000 || color8 != 0x000000) {
+            lampen_state[3] = true;
+        } else {
+            lampen_state[3] = false;
+        }
     }
 
     /**
@@ -148,11 +187,21 @@ namespace smarthome {
     //% block.loc.de="setze $lampe auf $color"
     //% color.shadow="LampenColorNumberPicker" color.defl='#ffffff'
     //% inlineInputMode=inline
-    export function ShowLampColor(lampe: lampennamen=lampennamen.dl1, color: number) {
+    export function ShowLampColor(lampe: lampennamen = lampennamen.dl1, color: number) {
         if (lampe < 3) {
             Lampen.setPixelColor(lampe, color)
+            if (color != 0x000000) {
+                lampen_state[lampe] = true;
+            } else {
+                lampen_state[lampe] = false;
+            }
         } else { // Wandlampe
             wl.showColor(color)
+            if (color != 0x000000) {
+                lampen_state[3] = true;
+            } else {
+                lampen_state[3] = false;
+            }
         }
         Lampen.show()
     }
@@ -169,7 +218,20 @@ namespace smarthome {
         } else { // Wandlampe
             wl.showColor(0x000000)
         }
+        lampen_state[lampe] = false;
         Lampen.show()
+    }
+
+    /**
+    * Gibt den Status einer Lampe zurück
+    */
+    //% block="$lampe is on"
+    //% block.loc.de="$lampe ist an"
+    //% inlineInputMode=inline
+    //% weight=5
+    //% group="Zustände"
+    export function GetLampStatus(lampe: lampennamen = lampennamen.dl1) : boolean {
+        return lampen_state[lampe];
     }
 
     /**
@@ -207,7 +269,7 @@ namespace smarthome {
 
     const MPR121_TOUCH_SENSOR_TOUCHED_ID = 2148
     const MPR121_TOUCH_SENSOR_RELEASED_ID = 2149
-    
+
 
     /**
      * Initialize the touch controller.
@@ -293,7 +355,7 @@ namespace smarthome {
 
     function detectAndNotifyTouchEvents() {
         let previousTouchStatus = 0
-        
+
         while (true) {
             const touchStatus = mpr121.readTouchStatus(MPR121_ADDRESS)
             touchController.lastTouchStatus = touchStatus
@@ -341,7 +403,7 @@ namespace smarthome {
             setupContextAndNotify(handler)
         })
     }
- 
+
     function setupContextAndNotify(handler: () => void) {
         touchController.lastEventValue = control.eventValue()
         handler()
@@ -517,7 +579,7 @@ namespace smarthome {
     }
 
     /**
-     * Code for the presence controller.
+     * Code for the presence controller. (old and new Version, IR and ToF)
      * by Moritz Metelmann
      */
 
@@ -544,6 +606,8 @@ namespace smarthome {
             lastPresenceDetection: false
         }
 
+        Rangefinder.init();
+
         control.inBackground(detectAndNotifyPresenceDetector)
     }
 
@@ -551,15 +615,16 @@ namespace smarthome {
         let previousPresenceStatus = false;
 
         while (true) {
-            if (previousPresenceStatus == false && pins.digitalReadPin(DigitalPin.C9) == 0) {
+            if (previousPresenceStatus == false && (pins.digitalReadPin(DigitalPin.C9) == 0 || Rangefinder.distance() < 80)) {
                 control.raiseEvent(PRESENCE_DETECTED_ID, 0);
                 previousPresenceStatus = true;
             }
-            if (previousPresenceStatus == true && pins.digitalReadPin(DigitalPin.C9) == 1) {
+            if (previousPresenceStatus == true && (pins.digitalReadPin(DigitalPin.C9) == 1 && (Rangefinder.distance() >= 80 || Rangefinder.distance() == 0 ))) {
                 previousPresenceStatus = false;
+                basic.pause(TOUCH_STATUS_PAUSE_BETWEEN_READ)
             }
 
-            basic.pause(TOUCH_STATUS_PAUSE_BETWEEN_READ)
+            
         }
 
 

@@ -39,6 +39,7 @@ const enum lampennamen {
     //% block="Wandlampe"
     wl = 3
 }
+
 //% weight=2 color=#AA278D icon="\uf015" block="Smarthome"
 namespace smarthome {
 
@@ -154,15 +155,16 @@ namespace smarthome {
     //% block="set wall light to $color1 $color2 $color3 $color4 $color5 $color6 $color7 $color8"
     //% block.loc.de="setze Wandlampe auf $color1 $color2 $color3 $color4 $color5 $color6 $color7 $color8"       
     //% color1.shadow="LampenColorNumberPicker"  color1.defl=0xff0000
-    //% color2.shadow="LampenColorNumberPicker"  color2.defl=0xFF7F00
-    //% color3.shadow="LampenColorNumberPicker"  color3.defl=0xFFFE00
-    //% color4.shadow="LampenColorNumberPicker"  color4.defl=0x7FFF00
-    //% color5.shadow="LampenColorNumberPicker"  color5.defl=0x00FF00
-    //% color6.shadow="LampenColorNumberPicker"  color6.defl=0x00FF7F
-    //% color7.shadow="LampenColorNumberPicker"  color7.defl=0x00FFFE
-    //% color8.shadow="LampenColorNumberPicker"  color8.defl=0x0040FF
+    //% color2.shadow="LampenColorNumberPicker"  color2.defl=0xff8000
+    //% color3.shadow="LampenColorNumberPicker"  color3.defl=0xffff00
+    //% color4.shadow="LampenColorNumberPicker"  color4.defl=0x00ff00
+    //% color5.shadow="LampenColorNumberPicker"  color5.defl=0x00ffff
+    //% color6.shadow="LampenColorNumberPicker"  color6.defl=0x0000ff
+    //% color7.shadow="LampenColorNumberPicker"  color7.defl=0xff00ff
+    //% color8.shadow="LampenColorNumberPicker"  color8.defl=0xff0080
     //% inlineInputMode=inline
     export function ShowWallLampColorPixel(color1: number, color2: number, color3: number, color4: number, color5: number, color6: number, color7: number, color8: number) {
+        Lampen.setBrightness(40);
         Lampen.setPixelColor(3, color1)
         Lampen.setPixelColor(4, color2)
         Lampen.setPixelColor(5, color3)
@@ -172,6 +174,7 @@ namespace smarthome {
         Lampen.setPixelColor(9, color7)
         Lampen.setPixelColor(10, color8)
         Lampen.show()
+        Lampen.setBrightness(255);
         if (color1 != 0x000000 || color2 != 0x000000 || color3 != 0x000000 || color4 != 0x000000 || color5 != 0x000000 || color6 != 0x000000 || color7 != 0x000000 || color8 != 0x000000) {
             lampen_state[3] = true;
         } else {
@@ -195,6 +198,7 @@ namespace smarthome {
                 lampen_state[lampe] = false;
             }
         } else { // Wandlampe
+            wl.setBrightness(40)
             wl.showColor(color)
             if (color != 0x000000) {
                 lampen_state[3] = true;
@@ -203,6 +207,7 @@ namespace smarthome {
             }
         }
         Lampen.show()
+        wl.setBrightness(255)
     }
 
     /**
@@ -241,8 +246,8 @@ namespace smarthome {
     //% shim=TD_ID
     //% value.fieldEditor="colornumber" value.fieldOptions.decompileLiterals=true
     //% weight=150
-    //% value.fieldOptions.colours='["#ffffff","#ff0000","#ffaa00","#ffdc00","#ffff00","#eaff00","#8eff00","#4df243","#42b87f","#00ffdc","#00dcff","#00a3ff","#0087ff","#acb3f3","#e0acfe","#a300ff","#ea00ff","#ff00e3","#fdd3f8","#f1d07e","#a8b5f5","#C3C6D8", "#f3f2da","#727474", "#000000"]'
-    //% value.fieldOptions.columns=5 value.fieldOptions.className='rgbColorPicker'  
+    //% value.fieldOptions.colours='["#ff0000","#ff8000","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff","#ff0080","#ffffff","#505050","#101010","#000000"]'
+    //% value.fieldOptions.columns=4 value.fieldOptions.className='rgbColorPicker'  
     export function CalliColorNumberPicker(value: number) {
         return value;
     }

@@ -48,7 +48,7 @@ namespace smarthome {
      * by Moritz Metelmann
      */
 
-    let shades_open: boolean = false;
+    let shades_open: boolean = true;
 
     /**
     * Öffnet/Schließt den Rolladen
@@ -649,6 +649,15 @@ namespace smarthome {
         })
     }
 }
+pins.servoWritePin(AnalogPin.C16, 0)
+basic.pause(800)
+pins.servoSetPulse(AnalogPin.C16, 0)
+motors.dualMotorPower(Motor.M0, 0)
+smarthome.SwitchLampOff(lampennamen.dl1)
+smarthome.SwitchLampOff(lampennamen.dl2)
+smarthome.SwitchLampOff(lampennamen.al)
+smarthome.SwitchLampOff(lampennamen.wl)
+
 basic.forever(function () {
 	
 })

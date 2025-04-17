@@ -191,11 +191,6 @@ namespace smarthome {
     //% inlineInputMode=inline
     export function ShowLampColor(lampe: lampennamen = lampennamen.dl1, color: number) {
         if (lampe < 3) {
-            if (color == 0x909090) {
-                color = 0x404040;
-            } else if (color == 0x505050) {
-                color = 0x101010;
-            }
             Lampen.setPixelColor(lampe, color)
             if (color != 0x000000) {
                 lampen_state[lampe] = true;
@@ -253,7 +248,7 @@ namespace smarthome {
     //% weight=150
     //% value.fieldOptions.colours='["#ff0000","#ff8000","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff","#ff0080","#ffffff","#909090","#505050","#000000"]'
     //% value.fieldOptions.columns=4 value.fieldOptions.className='rgbColorPicker'  
-    export function CalliColorNumberPicker(value: number) {
+    export function LampenColorNumberPicker(value: number) {
         return value;
     }
 

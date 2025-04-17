@@ -164,7 +164,7 @@ namespace smarthome {
     //% color8.shadow="LampenColorNumberPicker"  color8.defl=0xff0080
     //% inlineInputMode=inline
     export function ShowWallLampColorPixel(color1: number, color2: number, color3: number, color4: number, color5: number, color6: number, color7: number, color8: number) {
-        Lampen.setBrightness(40);
+        Lampen.setBrightness(20);
         Lampen.setPixelColor(3, color1)
         Lampen.setPixelColor(4, color2)
         Lampen.setPixelColor(5, color3)
@@ -191,6 +191,11 @@ namespace smarthome {
     //% inlineInputMode=inline
     export function ShowLampColor(lampe: lampennamen = lampennamen.dl1, color: number) {
         if (lampe < 3) {
+            if (color == 0x909090) {
+                color = 0x404040;
+            } else if (color == 0x505050) {
+                color = 0x101010;
+            }
             Lampen.setPixelColor(lampe, color)
             if (color != 0x000000) {
                 lampen_state[lampe] = true;
@@ -198,7 +203,7 @@ namespace smarthome {
                 lampen_state[lampe] = false;
             }
         } else { // Wandlampe
-            wl.setBrightness(40)
+            wl.setBrightness(20)
             wl.showColor(color)
             if (color != 0x000000) {
                 lampen_state[3] = true;
@@ -234,7 +239,7 @@ namespace smarthome {
     //% inlineInputMode=inline
     //% weight=5
     //% group="Zustände"
-    export function GetLampStatus(lampe: lampennamen = lampennamen.dl1) : boolean {
+    export function GetLampStatus(lampe: lampennamen = lampennamen.dl1): boolean {
         return lampen_state[lampe];
     }
 
@@ -246,7 +251,7 @@ namespace smarthome {
     //% shim=TD_ID
     //% value.fieldEditor="colornumber" value.fieldOptions.decompileLiterals=true
     //% weight=150
-    //% value.fieldOptions.colours='["#ff0000","#ff8000","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff","#ff0080","#ffffff","#505050","#101010","#000000"]'
+    //% value.fieldOptions.colours='["#ff0000","#ff8000","#ffff00","#00ff00","#00ffff","#0000ff","#ff00ff","#ff0080","#ffffff","#909090","#505050","#000000"]'
     //% value.fieldOptions.columns=4 value.fieldOptions.className='rgbColorPicker'  
     export function CalliColorNumberPicker(value: number) {
         return value;
@@ -623,12 +628,12 @@ namespace smarthome {
                 control.raiseEvent(PRESENCE_DETECTED_ID, 0);
                 previousPresenceStatus = true;
             }
-            if (previousPresenceStatus == true && (pins.digitalReadPin(DigitalPin.C9) == 1 && (Rangefinder.distance() >= 80 || Rangefinder.distance() == 0 ))) {
+            if (previousPresenceStatus == true && (pins.digitalReadPin(DigitalPin.C9) == 1 && (Rangefinder.distance() >= 80 || Rangefinder.distance() == 0))) {
                 previousPresenceStatus = false;
                 basic.pause(TOUCH_STATUS_PAUSE_BETWEEN_READ)
             }
 
-            
+
         }
 
 

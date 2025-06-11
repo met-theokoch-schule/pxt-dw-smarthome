@@ -617,21 +617,33 @@ namespace smarthome {
 
     function detectAndNotifyPresenceDetector() {
         let previousPresenceStatus = false;
-
-        while (true) {
-            if (previousPresenceStatus == false && (pins.digitalReadPin(DigitalPin.C9) == 0 || Rangefinder.distance() < 80)) {
-                control.raiseEvent(PRESENCE_DETECTED_ID, 0);
-                previousPresenceStatus = true;
-            }
-            if (previousPresenceStatus == true && (pins.digitalReadPin(DigitalPin.C9) == 1 && (Rangefinder.distance() >= 80 || Rangefinder.distance() == 0))) {
-                previousPresenceStatus = false;
+        let distance = Rangefinder.distance();
+        if (distance == 0) {
+            while (true) {
+                if (previousPresenceStatus == false && pins.digitalReadPin(DigitalPin.C9) == 0) {
+                    control.raiseEvent(PRESENCE_DETECTED_ID, 0);
+                    previousPresenceStatus = true;
+                }
+                if (previousPresenceStatus == true && pins.digitalReadPin(DigitalPin.C9) == 1) {
+                    previousPresenceStatus = false;
+                }
                 basic.pause(TOUCH_STATUS_PAUSE_BETWEEN_READ)
             }
-
-
+        } else {
+            let startdistance = distance;
+            let priviousPresenceTime = control.millis();
+            while (true) {
+                distance = Rangefinder.distance()
+                if (previousPresenceStatus == false && distance < startdistance - 5) {
+                    control.raiseEvent(PRESENCE_DETECTED_ID, 0);
+                    previousPresenceStatus = true;
+                    priviousPresenceTime = control.millis();
+                }
+                if (previousPresenceStatus == true && priviousPresenceTime < control.millis() - 1000 && distance >= startdistance - 5) {
+                    previousPresenceStatus = false;
+                }
+            }
         }
-
-
     }
 
     //% blockId=smarthome_presence_detected
@@ -652,7 +664,6 @@ smarthome.SwitchLampOff(lampennamen.wl)
 pins.servoWritePin(AnalogPin.C16, 0)
 basic.pause(800)
 pins.servoSetPulse(AnalogPin.C16, 0)
-
 basic.forever(function () {
 	
 })

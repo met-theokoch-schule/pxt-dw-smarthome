@@ -1,6 +1,6 @@
 {
     "name": "pxt-dw-smarthome",
-    "version": "1.7.1",
+    "version": "1.7.2",
     "description": "Erweiterung für das Digitale Welt Smarthome-Modell",
     "dependencies": {
         "core": "*",
